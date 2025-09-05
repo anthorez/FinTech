@@ -11,4 +11,5 @@ airflow users create \
     --role Admin
 
 echo "🚀 Starting Airflow Webserver..."
+
 exec airflow webserver

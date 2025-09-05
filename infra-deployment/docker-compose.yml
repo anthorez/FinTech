@@ -216,6 +216,9 @@ services:
       POSTGRES_PASSWORD: airflow123
     volumes:
       - airflow_postgres_data:/var/lib/postgresql/data
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
     networks:
       - data-stack
 
@@ -241,10 +244,14 @@ services:
       - _AIRFLOW_WWW_USER_CREATE=true
       - _AIRFLOW_WWW_USER_USERNAME=admin
       - _AIRFLOW_WWW_USER_PASSWORD=admin123
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPYCACHEPREFIX=/tmp/pycache
     volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/dags:/opt/airflow/dags      
       - ./airflow/plugins:/opt/airflow/plugins
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
     ports:
       - "8084:8080"
     command: webserver
@@ -265,8 +272,10 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=81HqDtbqAywKSOumSHMpQfKBf6cWC8iD_vBQ3Kf8h8A=
     volumes:
       - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/plugins:/opt/airflow/plugins     
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
     command: scheduler
     networks:
       - data-stack

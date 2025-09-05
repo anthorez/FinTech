@@ -15,11 +15,11 @@ create_configs() {
     echo "📁 Creating all required configuration files..."
     
     # Create directory structure
-    mkdir -p {init-sql,trino-config/catalog,airflow/{dags,logs,plugins},notebooks}
+    mkdir -p {init-sql,trino-config/catalog,airflow/dags,notebooks}
     
     # Set proper permissions for Airflow
-    chmod -R 777 airflow/ || true
-    
+    #chmod -R 777 airflow/ || true
+
     echo "🔧 Creating Trino configuration..."
     cat > trino-config/config.properties << 'EOF'
 coordinator=true
@@ -390,6 +390,9 @@ services:
       POSTGRES_PASSWORD: airflow123
     volumes:
       - airflow_postgres_data:/var/lib/postgresql/data
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
     networks:
       - data-stack
 
@@ -415,10 +418,14 @@ services:
       - _AIRFLOW_WWW_USER_CREATE=true
       - _AIRFLOW_WWW_USER_USERNAME=admin
       - _AIRFLOW_WWW_USER_PASSWORD=admin123
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPYCACHEPREFIX=/tmp/pycache
     volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/dags:/opt/airflow/dags      
       - ./airflow/plugins:/opt/airflow/plugins
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
     ports:
       - "8084:8080"
     command: webserver
@@ -439,8 +446,10 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=81HqDtbqAywKSOumSHMpQfKBf6cWC8iD_vBQ3Kf8h8A=
     volumes:
       - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/plugins:/opt/airflow/plugins     
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
     command: scheduler
     networks:
       - data-stack
@@ -578,93 +587,43 @@ EOF
 
 # Function to create README with instructions
 create_readme() {
-    echo "📚 Creating comprehensive README..."
-    
-    cat > README.md << 'EOF'
+    echo "Creating comprehensive README..."
+
+    cat > README.md << EOF
 # Modern Data Stack
 
-A production-ready modern data stack with all the essential components for data engineering, analytics, and machine learning.
+A modern data stack with all the essential components for data engineering, analytics, and machine learning.
 
-## 🏗️ Architecture
+## Management
 
-- **PostgreSQL** - OLTP database for transactional data
-- **MinIO** - S3-compatible object storage  
-- **Apache Kafka** - Message streaming platform
-- **Apache Flink** - Stream processing engine
-- **Apache Pinot** - Real-time OLAP database
-- **Trino** - Federated query engine
-- **Apache Airflow** - Workflow orchestration
-- **Metabase** - Business intelligence platform
-- **Jupyter** - Data science notebooks
-
-## 🚀 Quick Start
-
-```bash
-# One command deployment
-./deploy-bulletproof.sh
-
-# Check health
-./health-check.sh
-```
-
-## 🌐 Access URLs
-
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| Metabase | http://localhost:3000 | Setup required |
-| Kafka UI | http://localhost:8080 | None |
-| Trino | http://localhost:8083 | None |
-| Airflow | http://localhost:8084 | admin/admin123 |
-| Jupyter | http://localhost:8888 | token: admin123 |
-| MinIO Console | http://localhost:9001 | minioadmin/minioadmin |
-| Pinot Controller | http://localhost:9002 | None |
-
-## 🛠️ Management
-
-```bash
-# Start all services
-docker-compose up -d
-
-# Stop all services  
-docker-compose down
-
-# View logs
-docker-compose logs -f [service-name]
-
-# Scale a service
+### Scale a service
+\`\`\`bash
 docker-compose up -d --scale flink-taskmanager=3
-```
+\`\`\`
 
-## 📊 Sample Data
+## Sample Data
 
 The stack comes with sample data in PostgreSQL:
-- `customers` table with sample customer data
-- `orders` table with sample order data
+- \`customers\` table with sample customer data
+- \`orders\` table with sample order data
 - Pre-configured connections in Metabase and Trino
 
-## 🔧 Configuration
+## Configuration
 
 All configuration files are automatically created:
-- Trino: `./trino-config/`
-- Airflow: `./airflow/dags/`
-- Jupyter: `./notebooks/`
+- Trino: \`./trino-config/\`
+- Airflow: \`./airflow/dags/\`
+- Jupyter: \`./notebooks/\`
 
-## 🚨 Troubleshooting
-
-1. **Port conflicts**: Check `docker-compose ps` and modify ports in docker-compose.yml
-2. **Permission issues**: Run `chmod -R 777 airflow/`
-3. **Service not starting**: Check logs with `docker-compose logs [service-name]`
-4. **Health check**: Run `./health-check.sh`
-
-## 📈 Next Steps
+## Next Steps
 
 1. Connect to PostgreSQL and explore sample data
 2. Create your first Metabase dashboard
-4. Set up Kafka topics and Flink jobs
-5. Query across databases with Trino
+3. Set up Kafka topics and Flink jobs
+4. Query across databases with Trino
 EOF
 
-    echo "✅ README.md created!"
+    echo "README.md created."
 }
 
 # Main deployment function
