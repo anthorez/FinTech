@@ -308,6 +308,22 @@ services:
       - data-stack
     restart: unless-stopped
 
+  # SQL Mesh - Data Mesh Engine
+  sqlmesh:
+    build:
+      context: ./sqlmesh
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    container_name: sqlmesh
+    volumes:
+      - ./sqlmesh:/app
+    ports:
+      - "7600:7600"
+    command: ["sqlmesh", "ui", "--host", "0.0.0.0", "--port", "7600"]
+    networks:
+      - data-stack
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   minio_data:

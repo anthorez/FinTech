@@ -14,4 +14,4 @@ RUN apt-get update && apt-get install -y \
 RUN pip install "sqlmesh[web,airflow]"
 
 # Set entrypoint
-CMD ["sqlmesh"]
+CMD ["sqlmesh", "ui", "--host", "0.0.0.0", "--port", "7600"]
