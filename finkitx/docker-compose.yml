@@ -249,12 +249,13 @@ services:
     volumes:
       - ./airflow/dags:/opt/airflow/dags      
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/entrypoint.sh:/opt/airflow/entrypoint.sh
     tmpfs:
       - /opt/airflow/logs
       - /opt/airflow/dags/__pycache__
     ports:
       - "8084:8080"
-    command: webserver
+    command: ["bash", "/opt/airflow/entrypoint.sh"]
     networks:
       - data-stack
     restart: unless-stopped
@@ -272,11 +273,12 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=81HqDtbqAywKSOumSHMpQfKBf6cWC8iD_vBQ3Kf8h8A=
     volumes:
       - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/plugins:/opt/airflow/plugins     
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/entrypoint.sh:/opt/airflow/entrypoint.sh   
     tmpfs:
       - /opt/airflow/logs
       - /opt/airflow/dags/__pycache__
-    command: scheduler
+    command: ["bash", "/opt/airflow/entrypoint.sh"]
     networks:
       - data-stack
     restart: unless-stopped

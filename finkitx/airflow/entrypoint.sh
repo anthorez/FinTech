@@ -10,6 +10,7 @@ airflow users create \
     --lastname last \
     --role Admin
 
-echo "🚀 Starting Airflow Webserver..."
+echo "🚀 Starting services..."
+airflow scheduler &
 
 exec airflow webserver
