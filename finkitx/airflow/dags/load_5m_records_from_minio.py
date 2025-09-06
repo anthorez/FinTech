@@ -10,7 +10,7 @@ def fetch_and_insert():
                       aws_access_key_id='minioadmin',
                       aws_secret_access_key='minioadmin')
     
-    obj = s3.get_object(Bucket='datasets', Key='customers_5m.csv')
+    obj = s3.get_object(Bucket='datalake', Key='synthetic/5m_customers.csv')
     df = pd.read_csv(io.BytesIO(obj['Body'].read()))
 
     # Connect to Postgres
