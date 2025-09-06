@@ -1,4 +1,11 @@
 #!/bin/bash
+pip install --no-cache-dir \
+    pandas \
+    minio \
+    psycopg2-binary \
+    sqlalchemy \
+    requests
+
 echo "🔧 Initializing Airflow DB..."
 airflow db init
 
@@ -8,9 +15,12 @@ airflow users create \
     --password admin123 \
     --firstname first \
     --lastname last \
-    --role Admin
+    --role Admin \
+    --email anthonycasarez@gmail.com
 
 echo "🚀 Starting services..."
 airflow scheduler &
+
+exec airflow celery worker &
 
 exec airflow webserver

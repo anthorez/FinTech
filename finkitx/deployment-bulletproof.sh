@@ -18,7 +18,7 @@ create_configs() {
     mkdir -p {init-sql,trino-config/catalog,airflow/dags,notebooks}
     
     # Set proper permissions for Airflow
-    #chmod -R 777 airflow/ || true
+    chmod -R 777 airflow/ || true
 
     echo "🔧 Creating Trino configuration..."
     cat > trino-config/config.properties << 'EOF'
@@ -456,6 +456,31 @@ services:
     networks:
       - data-stack
     restart: unless-stopped
+
+  airflow-worker:
+    image: apache/airflow:2.7.1
+    container_name: airflow-worker
+    depends_on:
+      - airflow-redis
+      - airflow-postgres
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow123@airflow-postgres:5432/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow123@airflow-postgres:5432/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
+      - AIRFLOW__CORE__FERNET_KEY=81HqDtbqAywKSOumSHMpQfKBf6cWC8iD_vBQ3Kf8h8A=
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/entrypoint.sh:/opt/airflow/entrypoint.sh
+    tmpfs:
+      - /opt/airflow/logs
+      - /opt/airflow/dags/__pycache__
+    command: ["bash", "/opt/airflow/entrypoint.sh", "worker"]
+    networks:
+      - data-stack
+    restart: unless-stopped
+
 
   # Metabase - Business Intelligence
   metabase:
