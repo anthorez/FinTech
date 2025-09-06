@@ -1,4 +1,4 @@
-# Modern Data Stack - Production Ready
+# Modern Data Stack
 
 This project provisions a full-featured local data stack using Docker Compose, tailored for analytics, streaming, orchestration, and modeling workloads. All port conflicts are resolved, credentials are pre-set, and each service is configured with persistence and health checks.
 
@@ -63,11 +63,6 @@ This project provisions a full-featured local data stack using Docker Compose, t
 | Jupyter     | http://localhost:8888       |
 | SQLMesh     | http://localhost:7600       |
 
-4. Run health check (optional):
-
-    ```bash
-    ./health-check.sh
-    ```
 
 ## Data Initialization
 
