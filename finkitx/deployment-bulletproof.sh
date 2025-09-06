@@ -445,6 +445,7 @@ services:
       - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow123@airflow-postgres:5432/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
       - AIRFLOW__CORE__FERNET_KEY=81HqDtbqAywKSOumSHMpQfKBf6cWC8iD_vBQ3Kf8h8A=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/plugins:/opt/airflow/plugins
@@ -469,6 +470,7 @@ services:
       - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow123@airflow-postgres:5432/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
       - AIRFLOW__CORE__FERNET_KEY=81HqDtbqAywKSOumSHMpQfKBf6cWC8iD_vBQ3Kf8h8A=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/plugins:/opt/airflow/plugins
