@@ -326,6 +326,8 @@ services:
     container_name: sqlmesh
     volumes:
       - ./sqlmesh:/app
+    tmpfs:
+      - /sqlmesh/app/logs
     ports:
       - "7600:7600"
     command: ["sqlmesh", "ui", "--host", "0.0.0.0", "--port", "7600"]
