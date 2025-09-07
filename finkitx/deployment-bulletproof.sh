@@ -553,48 +553,6 @@ EOF
 }
 
 
-
-# Function to create README with instructions
-create_readme() {
-    echo "Creating comprehensive README..."
-
-    cat > README.md << EOF
-# Modern Data Stack
-
-A modern data stack with all the essential components for data engineering, analytics, and machine learning.
-
-## Management
-
-### Scale a service
-\`\`\`bash
-docker-compose up -d --scale flink-taskmanager=3
-\`\`\`
-
-## Sample Data
-
-The stack comes with sample data in PostgreSQL:
-- \`customers\` table with sample customer data
-- \`orders\` table with sample order data
-- Pre-configured connections in Metabase and Trino
-
-## Configuration
-
-All configuration files are automatically created:
-- Trino: \`./trino-config/\`
-- Airflow: \`./airflow/dags/\`
-- Jupyter: \`./notebooks/\`
-
-## Next Steps
-
-1. Connect to PostgreSQL and explore sample data
-2. Create your first Metabase dashboard
-3. Set up Kafka topics and Flink jobs
-4. Query across databases with Trino
-EOF
-
-    echo "README.md created."
-}
-
 # Main deployment function
 main() {
     echo "🎯 Starting bulletproof deployment setup..."
@@ -605,28 +563,7 @@ main() {
     # Create the fixed docker-compose.yml
     create_docker_compose
     
-    
-    # Create documentation
-    create_readme
-    
-    echo ""
-    echo "🎉 Bulletproof deployment setup complete!"
-    echo "========================================"
-    echo ""
-    echo "✅ What's included:"
-    echo "   📁 All configuration files pre-created"
-    echo "   🐳 Fixed docker-compose.yml (no port conflicts)"
-    echo "   📚 Comprehensive documentation"
-    echo ""
-    echo "🚀 To deploy:"
-    echo "   docker-compose up -d"
-    echo ""
-    echo ""
-    echo "💡 This setup will work on any machine with Docker!"
-    echo "   All config files are pre-created"
-    echo "   All port conflicts resolved"
-    echo "   All dependencies handled"
-    echo ""
+
 }
 
 # Run main function

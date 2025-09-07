@@ -1,0 +1,1 @@
+2025-09-06 23:29:16,903 - MainThread - sqlmesh.core.console - WARNING - The UI is deprecated and will be removed in a future version. Please use the SQLMesh VSCode extension instead. Learn more at https://sqlmesh.readthedocs.io/en/stable/guides/vscode/ (console.py:2260)
